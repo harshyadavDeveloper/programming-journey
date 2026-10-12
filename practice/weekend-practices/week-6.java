@@ -239,6 +239,39 @@ class Main {
 
         System.out.print(node.val + " ");
     }
+
+    // 9. Convert a given binary tree into its mirror image (left and right children
+    // swapped at every node) in place.
+    public static TreeNode mirrorTree(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+
+        mirrorTree(root.left);
+        mirrorTree(root.right);
+
+        return root;
+    }
+
+    // 10. Given a BST and two integers low and high, return the sum of all node
+    // values that fall within [low, high] inclusive —
+    // without visiting nodes that can’t possibly be in range.
+    public static int treeSum(TreeNode root, int low, int high) {
+        if (root == null) {
+            return 0;
+        }
+        if (root.val < low) {
+            return treeSum(root.right, low, high);
+        } else if (root.val > high) {
+            return treeSum(root.left, low, high);
+        } else {
+            return root.val + treeSum(root.left, low, high) + treeSum(root.right, low, high);
+        }
+    }
 }
 
 class TreeNode {
