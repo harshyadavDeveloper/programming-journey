@@ -96,7 +96,6 @@ var square = function calculate(num) {
 };
 console.log(square(3));
 
-
 /*
 Q4. THEORY + PRACTICAL — PARAMETERS VS ARGUMENTS
 
