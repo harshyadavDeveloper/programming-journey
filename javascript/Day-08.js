@@ -24,7 +24,7 @@ function processUser(callback) {
     callback("Harsh");
 };
 
-processUser();
+processUser(greet);
 /*
 Explanation:
 We pass the greet function as an argument to processUser.
