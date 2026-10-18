@@ -98,7 +98,9 @@ console.log(sayHello("Alex"));  // Hello, Alex!
 //- What is the main difference between call() and bind() ?
 
 /*
-1. Currying vs Partial Application: Currying converts a function with multiple arguments into a chain of functions taking one argument at a time. Partial application fixes some arguments in advance.
-2. Closure: A curried inner function can access outer function arguments because of a closure, which preserves access to the outer function's variables.
+1. Currying vs Partial Application: Currying converts a function with multiple arguments into a chain of functions 
+taking one argument at a time. Partial application fixes some arguments in advance.
+2. Closure: A curried inner function can access outer function arguments because of a closure, which preserves 
+access to the outer function's variables.
 3. call() vs bind(): call() executes the function immediately, while bind() returns a new function to execute later.
 */
