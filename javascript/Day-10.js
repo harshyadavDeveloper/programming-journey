@@ -152,11 +152,8 @@ const mainThread = (callback) => {
 mainThread(processAndRun); // passing processAndRun here makes it a callback
 
 // Q8. Refactor for reusability
-
 // You need to calculate the area and circumference of circles for several radii.
-
 // Write a reusable function that accepts radii and a calculation callback, then returns an array of results. Use it to calculate both area and circumference.
-
 // Don't modify the original functions. Focus on avoiding duplicate looping logic.
 const radii = [2, 3, 5];
 
