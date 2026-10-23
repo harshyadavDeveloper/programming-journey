@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Main {
     static int count = 0;
@@ -22,10 +24,28 @@ class Main {
         // third.next = fourth;
         // // fourth.next is null
         // System.out.println(detectCycle(first)); // false
-        int[] arr = { 2, 1, 5, 1, 3, 2 };
-        int k = 3;
+        // int[] arr = { 2, 1, 5, 1, 3, 2 };
+        // int k = 3;
 
-        System.out.println(maxSubarraySum(arr, k));
+        // System.out.println(maxSubarraySum(arr, k));
+
+        TreeNode root = new TreeNode(1);
+
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+
+        root.left.left = new TreeNode(4);
+        root.left.right = new TreeNode(5);
+
+        System.out.println("Before inversion:");
+        levelOrder(root);
+
+        invertTree(root);
+
+        System.out.println("\nAfter inversion:");
+        levelOrder(root);
+
+        System.out.println();
     }
 
     public static TreeNode buildBalancedBst(int[] arr, int start, int end) {
@@ -169,9 +189,10 @@ class Main {
         return sum;
     }
 
-    // 5. Invert a binary tree (mirror it) and confirm the structure with a level-order print before and after.
-    public  static TreeNode invertTree(TreeNode root){
-        if(root == null){
+    // 5. Invert a binary tree (mirror it) and confirm the structure with a
+    // level-order print before and after.
+    public static TreeNode invertTree(TreeNode root) {
+        if (root == null) {
             return null;
         }
 
@@ -182,6 +203,26 @@ class Main {
         invertTree(root.left);
         invertTree(root.right);
         return root;
+    }
+
+    public static void levelOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            TreeNode curr = queue.poll();
+
+            System.out.print(curr.val + " ");
+            if (curr.left != null) {
+                queue.add(curr.left);
+            }
+            if (curr.right != null) {
+                queue.add(curr.right);
+            }
+        }
     }
 
 }
