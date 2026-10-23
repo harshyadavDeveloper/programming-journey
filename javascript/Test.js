@@ -307,6 +307,39 @@ Write your implementation below:
 */
 
 /*
+- JavaScript treats functions as first-class citizens, meaning they can be passed as arguments and returned from other functions. 
+A callback is a function passed to another function to be invoked by it. A higher-order function is a function that accepts 
+another function as an argument or returns a function. The same function can be a callback in one context and a higher-order 
+function in another.
+
+- Reusable code follows the DRY (Don't Repeat Yourself) principle by separating the iteration logic from the operation being 
+performed. This reduces code duplication, improves readability and maintainability, and makes the code easier to extend. If the 
+iteration logic needs to change, we update it in one place rather than modifying multiple loops.
+*/
+const arr = [2, 4, 7, 11, 8, 6];
+
+const double = (num) => {
+  return num * 2;
+};
+
+const sqr = (n) => {
+  return n * n;
+};
+
+function processArray(arr, callback) {
+  const output = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    output.push(callback(arr[i]));
+  }
+
+  return output;
+}
+
+console.log(processArray(arr, double));
+console.log(processArray(arr, sqr));
+
+/*
 ========================================================
 Q9. EVENT LOOP — OUTPUT PREDICTION
 ========================================================
