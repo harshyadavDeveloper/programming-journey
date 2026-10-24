@@ -558,55 +558,79 @@ Q13. filter() AND map() — PRACTICAL
 ========================================================
 
 Given this array:
-
+*/
 const employees = [
-    { name: "Amit", salary: 25000 },
-    { name: "Sara", salary: 50000 },
-    { name: "John", salary: 35000 },
-    { name: "Priya", salary: 60000 },
-    { name: "Neha", salary: 20000 }
+  { name: "Amit", salary: 25000 },
+  { name: "Sara", salary: 50000 },
+  { name: "John", salary: 35000 },
+  { name: "Priya", salary: 60000 },
+  { name: "Neha", salary: 20000 },
 ];
 
-Write a single chained expression using filter and map
-that returns the names of employees earning at least
-35000.
+// Write a single chained expression using filter and map
+// that returns the names of employees earning at least
+// 35000.
 
-Expected result:
+// Expected result:
 
-["Sara", "John", "Priya"]
+// ["Sara", "John", "Priya"]
 
-Questions:
-- Why should filter come before map in this solution?
-- What would change if map came first?
-- What does each method return?
+// Questions:
+// - Why should filter come before map in this solution?
+// - What would change if map came first?
+// - What does each method return?
 
-Write your code below:
+// Write your code below:
+const empNames = employees
+  .filter((emp) => emp.salary >= 35000)
+  .map((emp) => emp.name);
+/*
+- we filter first because it filters out the employee whose salary is less than 35000, then the map only creates a array that only
+has names in it.
+- if map comes first then the employee object will becomes name strings and so the subsequent salary check would fail returning 
+only an empty array
+- filter() returns a new array containing the element that passes its condition. map() returns a new array containing the results
+of applying callback to each element
+
 */
-
 /*
 ========================================================
 Q14. reduce() — ACCUMULATOR AND INITIAL VALUE
 ========================================================
 
 Predict every line of output.
+*/
+const numbers14 = [5, 10, 15];
 
-const numbers = [5, 10, 15];
-
-const result = numbers.reduce((acc, curr) => {
-    console.log("acc:", acc, "curr:", curr);
-    return acc + curr;
+const result14 = numbers14.reduce((acc, curr) => {
+  console.log("acc:", acc, "curr:", curr);
+  return acc + curr;
 });
 
-console.log("result:", result);
+console.log("result:", result14);
 
-Questions:
-- Why does the callback not execute for the first element?
-- What changes if you supply an initial value of 0?
-- What happens if reduce is called on an empty array
-  without an initial value?
-- Why is returning the accumulator important?
+// Questions:
+// - Why does the callback not execute for the first element?
+// - What changes if you supply an initial value of 0?
+// - What happens if reduce is called on an empty array
+//   without an initial value?
+// - Why is returning the accumulator important?
 
-Your answer:
+// Your answer:
+/*
+output: acc: 5, curr: 10
+        acc: 15, curr: 15
+result: 30
+
+- reduce() requires initial values of the acc as a second arguement and if we not provide it then it considers the first element as
+the initial value of its acc and starts from second element
+
+- if we supply 0 as initial values then it will start from the first element of the array
+
+- It throws a TypeError because reduce() cannot determine an initial accumulator from an empty array when no initial value is 
+provided
+
+- if we dont return anything then it implicitly return undefined. after the first iteration the acc becomes undefiend
 */
 
 /*
@@ -615,41 +639,57 @@ Q15. FINAL CODING CHALLENGE — map/filter/reduce
 ========================================================
 
 Given:
-
+*/
 const orders = [
-    { item: "Laptop", price: 50000, quantity: 1 },
-    { item: "Mouse", price: 1000, quantity: 2 },
-    { item: "Keyboard", price: 3000, quantity: 1 },
-    { item: "Monitor", price: 12000, quantity: 2 },
-    { item: "USB Cable", price: 500, quantity: 4 }
+  { item: "Laptop", price: 50000, quantity: 1 },
+  { item: "Mouse", price: 1000, quantity: 2 },
+  { item: "Keyboard", price: 3000, quantity: 1 },
+  { item: "Monitor", price: 12000, quantity: 2 },
+  { item: "USB Cable", price: 500, quantity: 4 },
 ];
 
-Task:
+// Task:
 
-Calculate the total cost of orders where the individual
-item price is at least 1000.
+// Calculate the total cost of orders where the individual
+// item price is at least 1000.
 
-For each qualifying order:
-    order total = price * quantity
+// For each qualifying order:
+//     order total = price * quantity
 
-Expected calculation:
-    Laptop:   50000 * 1
-    Mouse:     1000 * 2
-    Keyboard:  3000 * 1
-    Monitor:  12000 * 2
+// Expected calculation:
+//     Laptop:   50000 * 1
+//     Mouse:     1000 * 2
+//     Keyboard:  3000 * 1
+//     Monitor:  12000 * 2
 
-Expected final result:
-    79000
+// Expected final result:
+//     79000
 
-Requirements:
-- Use filter(), map() and reduce().
-- Do not use a regular for loop.
-- Keep the solution in a single chained expression.
+// Requirements:
+// - Use filter(), map() and reduce().
+// - Do not use a regular for loop.
+// - Keep the solution in a single chained expression.
 
-After writing the code, explain what each method does
-and why reduce is suitable for the final step.
+// Write your code below:
+const price = orders
+  .filter((o) => o.price >= 1000)
+  .map((o) => {
+    const total = o.price * o.quantity;
+    return total;
+  })
+  .reduce((acc, curr) => {
+    acc += curr;
+    return acc;
+  }, 0);
 
-Write your code below:
+console.log(price);
+/*
+filter() selects orders whose individual item price is at least 1000. The USB Cable order is excluded because its price is 500.
+map() calculates the total for each qualifying order by multiplying price * quantity. It returns [50000, 2000, 3000, 24000].
+reduce() adds all those totals together, using 0 as the initial accumulator, to produce 79000.
+
+reduce() is suitable because we need to combine multiple order totals into a single value. It accumulates the values one by one 
+and returns the final sum.
 */
 
 /*
@@ -657,12 +697,4 @@ Write your code below:
 END OF TEST
 ========================================================
 
-Before submitting:
-- Answer every theory question.
-- Write exact outputs for prediction questions.
-- Explain the tricky cases in your own words.
-- Complete all practical implementations.
-
-Do not check the answers online while attempting it.
-========================================================
 */
