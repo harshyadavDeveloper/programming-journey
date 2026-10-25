@@ -151,35 +151,41 @@ Answer all parts.
 A. Explain the difference between undefined and not defined.
 
 B. Predict the output:
-
+*/
 let message = "Outer";
 
 function outer() {
-    let message = "Middle";
+  let message = "Middle";
 
-    function inner() {
-        let result = "Inner";
-        console.log(message);
-        console.log(Inner);
-    }
-
-    inner();
+  function inner() {
+    let result = "Inner";
+    console.log(message);
     console.log(result);
+  }
+
+  inner();
+  console.log(result);
 }
 
 outer();
 
 
-C. Explain:
-- How does lexical scope determine variable access?
-- How does the scope chain find a variable?
-- Why does the final console.log cause a problem?
+// C. Explain:
+// - How does lexical scope determine variable access?
+// - How does the scope chain find a variable?
+// - Why does the final console.log cause a problem?
 
-Your answer:
-*/
+// Your answer:
 
-// undefined: A variable exits but not yet has been initialized
-// not defined: the variable does not exists in the accessible scope, so accessing it throws a ReferenceError.
+
+// undefined: The variable exists, but its current value is undefined.
+// Example:
+var a;
+console.log(a); // undefined
+
+// Not defined: The identifier has not been declared in an accessible scope.
+// Accessing it throws a ReferenceError.
+console.log(b); // ReferenceError
 
 // output: Middle
 // Inner
@@ -231,8 +237,8 @@ console.log(counterB());
 output: 1
         2
         1
-        2
         3
+        2
 - it does not reset because the return function retains the access to the count variable in its lexical scope, even after 
 createCounter finishes executing. Each call increments the exisitng value instead of resetting it.
 - each call to createCounter create a new lexical environment with its own count variable. so counterA and counterB maintains
@@ -432,9 +438,9 @@ boundIntroduce("India");
 
 // Your answer:
 /*
-output: call: Alex from Goa, India
-        apply: Alex from Pune, India
-        bind: Alex from Delhi, India
+output: Alex from Goa, India
+        Alex from Pune, India
+        Alex from Delhi, India
 
 - both methods invokes functions immediately and explicitly sets the value of this. the difference is how they accpet arguements:
 call() accepts argements individually
@@ -618,9 +624,9 @@ console.log("result:", result14);
 
 // Your answer:
 /*
-output: acc: 5, curr: 10
-        acc: 15, curr: 15
-result: 30
+output: acc: 5 curr: 10
+        acc: 15 curr: 15
+        result: 30
 
 - reduce() requires initial values of the acc as a second arguement and if we not provide it then it considers the first element as
 the initial value of its acc and starts from second element
