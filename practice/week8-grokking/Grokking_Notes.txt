@@ -1,0 +1,73 @@
+==================================================
+DAY: Sunday | DATE: 25/10/2026 | CHAPTER 01: Binary Search and Big O notation
+==================================================
+
+IN MY OWN WORDS (required)
+binary seach is a algorithm that is used to search a data in an array. the big idea here is we start from the middle
+of the array and start eliminating the irrelevant part from our search range. this is better than linear search 
+becasue there we have to go thru all the elements start till the end. it requires a lot of work. 
+
+Big O is a special notation that tells u how fast angorithm is. algorithm times grows on different rates based on the 
+code we write. big O establishes the worst case runtime and not the best case. the time complexity for binary search
+is Big O(logn). some commonly used big O notation are(fastest to slowest):
+O(logn), O(n), O(n logn), O(n^2) and O(n!)
+
+EXAMPLE (required)
+suppose we are looking for a persons number in the phone book whose name is Keno we will try to open the book from the
+middle cause that is where k will be. if we dont see k there we will eliminate the first half or the second of the 
+book based on where we r actually.
+
+CODE (optional, only if it helps)
+public static int binarySearch(int[] arr, int target){
+    int start = 0;
+    int end = arr.length -1;
+
+    int foundIndex = -1;
+
+    while(start<=end){
+        int mid = (start+end)/2;
+        if(arr[mid] == target){
+            foundIndex = mid;
+            break;
+        }else if(target<arr[mid]){
+            end = mid-1;
+        }else{
+            start = mid +1;
+        }
+
+    }
+    return foundIndex;
+}
+WHY BINARY SEARCH IS O(log n):
+Every step throws away half of the remaining list. So the question is:
+"how many times can I cut n in half before only 1 item is left?"
+That number is log n.
+
+Example: 1,000,000 items
+1,000,000 -> 500,000 -> 250,000 -> ... -> 1
+That takes about 20 halvings, so at most about 20 steps.
+Linear search could take up to 1,000,000 steps for the same list.
+
+If the list doubles to 2,000,000, I only need ONE extra step,
+because one more cut brings it back to the old size.
+That is why log n grows so slowly.
+
+EXERCISES: 
+Give the run time for each of these scenarios in terms of big O.
+1. You have a name, and you want to find the person’s phone number
+in the phone book: if we use binary search then O(logn) and linear O(n).
+
+2. You have a phone number, and you want to find the person’s name
+in the phone book. (Hint: You’ll have to search through the whole
+book!): here cant use binary search we have to use linear so O(n).
+
+3. You want to read the numbers of every person in the phone book: O(n).
+
+4. You want to read the numbers of just the As. (This is a tricky one!
+It involves concepts that are covered more in chapter 4. Read the
+answer—you may be surprised!): O(n)
+
+
+STILL CONFUSING (required)
+nothing
+==================================================
