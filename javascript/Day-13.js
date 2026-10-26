@@ -402,6 +402,25 @@ Promises reduce the risks associated with callback-based
 control flow, though they do not eliminate every possible
 form of inversion of control.
 
+E.g.: function createOrder(cart) {
+    return new Promise((resolve, reject) => {
+        // Imagine the implementation forgets to call
+        // either resolve() or reject().
+    });
+}
+
+createOrder(cart)
+    .then((order) => {
+        console.log(order);
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+Nothing gets printed. The Promise remains pending because neither resolve() nor reject() was called.
+
+Promises cannot automatically fix incorrectly implemented code. They also cannot guarantee that an external operation 
+will succeed.
+
 ========================================================
 4. PROMISE IMMUTABILITY / SETTLEMENT
 ========================================================
