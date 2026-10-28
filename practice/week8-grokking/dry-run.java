@@ -56,4 +56,15 @@ class Main {
         }
         return sorted;
     }
+
+    public static int fact(int num) {
+        if (num < 0) {
+            throw new IllegalArgumentException("factorial undefined for negatives");
+        }
+        if (num == 0 || num == 1) {
+            return 1;
+        }
+
+        return num * fact(num - 1);
+    }
 }

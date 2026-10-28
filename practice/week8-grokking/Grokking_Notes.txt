@@ -164,3 +164,72 @@ n^2/2, and why is that fine? If you can explain it, write "nothing".)
 Big 0 notation drops the constant factors because it focuses on the growth rate of a function as the input size approaches infinity meaning constant scaling factors 
 like 1/2 do no alter the fundamental complexity class
 ==================================================
+
+==================================================
+DAY 3 | DATE: 28/10/2026 | CHAPTER 03: Recursion
+==================================================
+
+IN MY OWN WORDS
+Recursion is a function calling itself until it reaches a base case.
+The base case is what stops it. Without one, the calls never stop and
+the stack overflows (StackOverflowError in Java).
+
+The call stack has two operations: push and pop. Every CALL to the
+function pushes a new frame onto the stack. Each frame has its own
+copy of the variables, so one call's num can't be read or changed by
+another call's num. When the base case returns, frames are popped one
+by one, each finishing its work with the value that came back.
+
+"Loops may achieve a performance gain for your program. Recursion may
+achieve a performance gain for your programmer. Choose which is more
+important in your situation!"
+Meaning: recursion is often cleaner to write, loops can be cheaper to run.
+
+CODE
+public static int fact(int num) {
+    if (num == 1) {            // base case: stops the calls
+        return 1;
+    }
+    return num * fact(num - 1);   // recursive case: smaller problem
+}
+
+TRACE: fact(3)
+push fact(3) -> needs fact(2)
+push fact(2) -> needs fact(1)
+push fact(1) -> base case, returns 1
+pop  fact(1)
+fact(2) = 2 * 1 = 2, pop
+fact(3) = 3 * 2 = 6, pop
+
+EDGE CASE I FOUND
+fact(0) -> Stack over flow error. this code will run forever until the satck overflow cause the base case will never hit  <- fill this in after tracing
+
+CODE (fixed version)
+public static int fact(int num) {
+    if (num < 0) {
+        throw new IllegalArgumentException("factorial undefined for negatives");
+    }
+    if (num == 0 || num == 1) {     // base cases: 0! = 1 and 1! = 1
+        return 1;
+    }
+    return num * fact(num - 1);
+}
+
+EDGE CASE I FOUND
+fact(0) never hits "num == 1" in my first version. num goes 0, -1, -2...
+and the stack overflows. Fix: make 0 a base case too, and reject
+negatives first. Lesson: a base case must cover EVERY input the
+function can receive, not just the ones I was thinking about.
+
+BIG O
+Time: O(n) -> one call per step down to the base case.
+Stack space: O(n) -> n frames sit on the stack at the same time.
+The loop version uses O(1) extra space. Same answer, different cost.
+
+CONNECTS TO
+Week 4: my recursive factorial, digit sum and power.
+Task 104: the recursive vs iterative factorial memory comparison.
+Week 4: recursive Fibonacci (177 calls vs about 11 needed for fib(10)).
+Week 6: trees, where recursion is necessary, not just elegant.
+
+==================================================
