@@ -530,8 +530,8 @@ Write your implementation below:
 async function processOrder() {
     try {
         const order = await createOrder();
-        const payment = await proceedToPayment(order);
         console.log(order);
+        const payment = await proceedToPayment(order);
         showOrderSummary(payment);
 
     } catch (err) {
