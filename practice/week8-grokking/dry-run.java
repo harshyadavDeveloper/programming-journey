@@ -30,4 +30,30 @@ class Main {
         return foundIndex;
 
     }
+
+    public static int minIndex(int[] arr, int start) {
+        int minIndex = start;
+
+        for (int i = start + 1; i < arr.length; i++) {
+            if (arr[i] < arr[minIndex]) {
+                minIndex = i;
+            }
+
+        }
+        return minIndex;
+    }
+
+    public static int[] selectionSort(int[] arr) {
+        int[] sorted = arr.clone();
+        int n = sorted.length;
+
+        for (int i = 0; i < n - 1; i++) {
+            int min = minIndex(sorted, i);
+
+            int temp = sorted[i];
+            sorted[i] = sorted[min];
+            sorted[min] = temp;
+        }
+        return sorted;
+    }
 }
