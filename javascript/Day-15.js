@@ -53,7 +53,7 @@ waiting for a successful result. if all the input promise reject it rejects with
 data from multiple servers and using the first successful response.
 
 - AgrregatorError is an error object that groups multiple errors into one. In promise.any, it is returned when all the input promises
-rejects and its error property contains the rejection reason.
+rejects and its errors property contains the rejection reason.
 */
 
 
@@ -184,7 +184,7 @@ Questions:
 - Why is this behavior described as fail-fast?
 
 Your answer:
-output: Task Failed
+output: Task failed
         Slow task completed
 
 - Task failed prints first because failedTask rejects after 20 ms, causing Promise.all() to reject and execute the .catch() handler.
