@@ -155,7 +155,7 @@ Q3. THIS INSIDE REGULAR FUNCTIONS
 ========================================================
 
 Predict the exact output.
-
+*/
 function normalFunction() {
     return this;
 }
@@ -167,7 +167,7 @@ function strictFunction() {
 
 console.log(normalFunction() === globalThis);
 console.log(strictFunction());
-
+/*
 Questions:
 
 - Why does the first function return the global object?
@@ -190,7 +190,7 @@ Q4. THIS WITH null AND undefined
 ========================================================
 
 Predict the exact output.
-
+*/
 function showThis() {
     return this === globalThis;
 }
@@ -205,7 +205,7 @@ function strictShowThis() {
 
 console.log(strictShowThis.call(null));
 console.log(strictShowThis.call(undefined));
-
+/*
 Questions:
 
 - Why do call(null) and apply(undefined) behave this way
@@ -214,6 +214,14 @@ Questions:
 - Explain the this substitution rule.
 
 Your answer:
+output: true
+        true
+        null
+        undefined
+- The function runs in non-strict mode, so JavaScript substitutes null or undefined with the global object (globalThis) when binding this.
+- In strict mode, JavaScript preserves the exact this value passed to the function. Therefore, call(null) returns null, and call(undefined) returns undefined. and 
+even if we keep .call() empty it will show undefined
+- In non-strict mode, a regular function converts null or undefined supplied as this into the global object. In strict mode, the original value is preserved.
 */
 
 
@@ -223,7 +231,7 @@ Q5. THIS INSIDE OBJECT METHODS
 ========================================================
 
 Predict the exact output.
-
+*/
 const student = {
     name: "Alex",
 
@@ -240,7 +248,7 @@ const anotherStudent = {
 
 student.printName();
 anotherStudent.printName();
-
+/*
 Questions:
 
 - Why does the same function print different names?
@@ -249,6 +257,13 @@ Questions:
 - What determines the value of this in a method call?
 
 Your answer:
+output: Alex
+        Sam
+- The same function is called on two different objects. Therefore, this refers to student in the first call and anotherStudent in the second call, printing Alex and 
+Sam, respectively.
+- It depends on how the function is called, not where it was originally defined.
+- In a regular method call, this refers to the object immediately before the dot used to invoke the method. this refers to the object used as the receiver of 
+the method call
 */
 
 
@@ -258,7 +273,7 @@ Q6. DETACHED OBJECT METHODS
 ========================================================
 
 Predict the exact output.
-
+*/
 const user = {
     name: "Harsh",
 
@@ -271,7 +286,7 @@ const detachedMethod = user.getThis;
 
 console.log(user.getThis() === user);
 console.log(detachedMethod() === globalThis);
-
+/*
 Questions:
 
 - Why does the first comparison return true?
@@ -281,7 +296,18 @@ Questions:
 - How could bind() help preserve the original context?
 
 Your answer:
+output: true
+        true
+
+- Because user.getThis() is a method call, so this refers to the user object.
+- Because detachedMethod() is a plain function call. In non-strict mode, this defaults to the global object, so the comparison returns true.
+- We copied the function reference, not its this context. When called independently, its this value is determined by the new call site.
+- bind(user) creates a new function whose this is permanently bound to user, even when called independently.
+
+Bind e.g.:
 */
+const bindDetachedMethod = user.getThis.bind(user);
+console.log(bindDetachedMethod() == globalThis); // false. because this is permanently bound to user 
 
 
 /*
@@ -290,7 +316,7 @@ Q7. NESTED REGULAR FUNCTION VS ARROW FUNCTION
 ========================================================
 
 Predict the exact output.
-
+*/
 const person = {
     name: "Sam",
 
@@ -310,7 +336,7 @@ const person = {
 };
 
 person.greet();
-
+/*
 Questions:
 
 - Why does regularInner() behave differently?
@@ -318,6 +344,13 @@ Questions:
 - Why does the arrow function retain access to person?
 
 Your answer:
+output: false
+        true
+
+- A regular function has its own this, determined by how it is called. Since regularInner() is called independently in non-strict mode, this refers to globalThis, 
+not person. Therefore, the comparison returns false.
+- An arrow function doesn't have its own this. It inherits this lexically from its surrounding scope.
+- Because arrowInner is defined inside greet(), where this refers to person. The arrow function inherits that same this value, so the comparison returns true.
 */
 
 
@@ -327,7 +360,7 @@ Q8. ARROW FUNCTION — LEXICAL THIS GOTCHA
 ========================================================
 
 Predict the exact output.
-
+*/
 function createUser() {
 
     return {
@@ -351,7 +384,7 @@ const anotherContext = {
 };
 
 console.log(user.getName.call(anotherContext));
-
+/*
 Questions:
 
 - Why does user.name return one value while
@@ -362,6 +395,15 @@ Questions:
   containing it as its this?
 
 Your answer:
+output: Alex
+        Outer
+        Outer
+- user.name accesses the name property of the returned object, which is "Alex". However, getName is an arrow function that inherits this from createUser(), so 
+it returns "Outer".
+- It inherits this lexically from its surrounding scope, which is the execution of createUser(). There, this refers to the object passed to createUser.call().
+- No. Arrow functions don't have their own this binding, so call(), apply(), and bind() cannot override their inherited this.
+Because an arrow function doesn't derive this from the object used to invoke it. It inherits this from its surrounding lexical scope, regardless of which object 
+contains it.
 */
 
 
@@ -371,7 +413,7 @@ Q9. THIS INSIDE DOM EVENT HANDLERS
 ========================================================
 
 Assume this HTML element exists in a browser:
-
+*/
 <button id="myButton">Click Me</button>
 
 const button = document.getElementById("myButton");
@@ -383,7 +425,7 @@ button.addEventListener("click", function () {
 button.addEventListener("click", () => {
     console.log(this === button);
 });
-
+/*
 Questions:
 
 - When the button is clicked, what are the two outputs?
@@ -393,6 +435,12 @@ Questions:
   handler in this example?
 
 Your answer:
+output: true
+        false
+- true, followed by false.
+- DOM event handlers using regular functions receive the event element as this.
+- Arrow functions don't have their own this; they inherit it from their surrounding lexical scope.
+- It represents the DOM element to which the event handler is attached, which is the button in this example.
 */
 
 
@@ -402,7 +450,7 @@ Q10. PRACTICAL — BORROWING METHODS
 ========================================================
 
 Given:
-
+*/
 const user1 = {
     name: "Alex"
 };
@@ -414,6 +462,9 @@ const user2 = {
 function introduce(city, country) {
     return this.name + " from " + city + ", " + country;
 }
+
+
+/*
 
 Tasks:
 
@@ -437,21 +488,21 @@ Sam from Pune, India
 Alex from Delhi, India
 
 Write your implementation below:
+Method borrowing is the technique of using a function with a different object's this value without copying that function into the object.
+call() invokes the function immediately, accepting arguments individually.
+apply() invokes the function immediately, accepting arguments as an array (or array-like object).
+bind() returns a new function with a permanently bound this value and optionally pre-filled arguments. It does not invoke the function immediately.
 */
+console.log(introduce.call(user1, "Goa", "India"));
+console.log(introduce.apply(user2, ["Pune", "India"]));
+const introduceAlex = introduce.bind(user1, "Delhi");
+console.log(introduceAlex("India"));
 
 
 /*
 ========================================================
                  END OF DAY 16 TEST
 ========================================================
-
-Before submitting:
-
-- Explain the theory in your own words.
-- Trace the value of this at every function call.
-- Pay special attention to regular functions vs arrows.
-- Don't assume that an object containing a function
-  automatically becomes its this value.
 
 ========================================================
 */
