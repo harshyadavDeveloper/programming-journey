@@ -1,0 +1,41 @@
+JAVASCRIPT LEETCODE — 30 DAYS PRACTICE
+
+Already Completed:
+1. #2667 – Create Hello World Function
+2. #2620 – Counter
+
+Functions & Closures:
+3. #2704 – To Be or Not To Be
+4. #2665 – Counter II
+5. #2635 – Apply Transform Over Each Element in Array
+6. #2634 – Filter Elements from Array
+7. #2626 – Array Reduce Transformation
+8. #2629 – Function Composition
+9. #2703 – Return Length of Arguments Passed
+10. #2666 – Allow One Function Call
+11. #2623 – Memoize
+
+Promises & Async JavaScript:
+12. #2723 – Add Two Promises
+13. #2621 – Sleep
+14. #2715 – Timeout Cancellation
+15. #2725 – Interval Cancellation
+16. #2637 – Promise Time Limit
+17. #2622 – Cache With Time Limit
+18. #2627 – Debounce
+19. #2721 – Execute Asynchronous Functions in Parallel
+
+Arrays & Objects:
+20. #2727 – Is Object Empty
+21. #2677 – Chunk Array
+22. #2619 – Array Prototype Last
+23. #2631 – Group By
+24. #2724 – Sort By
+25. #2722 – Join Two Arrays by ID
+26. #2625 – Flatten Deeply Nested Array
+27. #2705 – Compact Object
+
+Classes & OOP:
+28. #2694 – Event Emitter
+29. #2695 – Array Wrapper
+30. #2726 – Calculator with Method Chaining
