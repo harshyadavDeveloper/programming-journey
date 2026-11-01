@@ -233,3 +233,69 @@ Week 4: recursive Fibonacci (177 calls vs about 11 needed for fib(10)).
 Week 6: trees, where recursion is necessary, not just elegant.
 
 ==================================================
+
+==================================================
+DAY 4 | DATE: 01/11/2026 | CHAPTER 04: Quicksort
+(divide and conquer)
+==================================================
+
+IN MY OWN WORDS
+Divide and conquer is not an algorithm, it's a mindset. When I'm stuck
+on a problem, I ask: can I split it into smaller versions of the same
+problem? To use it I need (1) a base case that is simple enough to
+solve directly, and (2) a recursive case that shrinks the problem.
+
+Quicksort uses it:
+1. Pick an element as the pivot.
+2. Partition: smaller elements go left, larger go right (in my version,
+   elements equal to the pivot go left). After this the array is NOT
+   sorted, but the pivot is in its final position.
+3. Do the same on the left part and the right part.
+Base case: an array with 0 or 1 elements is already sorted.
+
+EXAMPLE
+{5, 2, 8, 1, 9, 3}, pivot 5
+left (<= 5): {2, 1, 3}   pivot: 5   right (> 5): {8, 9}
+Then quicksort {2,1,3} and {8,9} the same way.
+
+CODE
+// swap(), partition(), quickSort() <- paste my own code here
+// comment each in my own words
+
+BIG O
+Average: O(n log n)
+  - about log n levels of splitting (the pivot lands near the middle)
+  - each level partitions every element once -> n work per level
+  - so n x log n
+Worst: O(n^2)
+  - the pivot is always the smallest or largest element, so one side
+    gets everything and the problem only shrinks by 1 each time
+  - n levels x n work per level
+Same Big O does not mean same speed: Big O hides constants, so two
+O(n log n) sorts can differ in real speed.
+
+WORST CASE I TRACED
+{1,2,3,4,5}, pivot = first element:
+(write the left and right sides at each step, then how many levels it took)
+
+WHAT I USED TO THINK
+I thought the pivot was "a random number". It's an element of the array,
+and how I choose it decides whether I get the average or the worst case.
+
+CONNECTS TO
+Week 3: binary search (halving). Week 4: recursion and the call stack.
+Week 6 Task 92: sorted array to balanced BST (also divide and conquer).
+Week 6 Day 4: sorted input made a BST into a chain, the same shape as
+quicksort's worst case.
+
+STILL CONFUSING
+(in my partition, equal elements go left. What happens if EVERY element
+is the same, like {4,4,4,4}? Trace it)
+My partition (pivot = last element, equal elements go left) sends
+EVERY element to the left, because arr[j] <= pivot is always true.
+The pivot ends at the last index, the right side is empty, and the left
+side is only 1 smaller. n levels x n work = O(n^2), even though the
+array is already "sorted".
+Takeaway: how I partition equal elements decides the worst case,
+not just which pivot I pick.
+==================================================
