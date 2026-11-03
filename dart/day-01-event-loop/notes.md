@@ -57,3 +57,38 @@ Microtasks have strict priority over events, so a never-ending microtask chain s
 - Async I/O is done by native code and comes back as an event. `async` is not a thread.
 - An async function runs synchronously until its first `await`, then resumes via a microtask.
 - Timers are "no earlier than". Heavy sync work freezes the UI, and the fix is an isolate.
+
+## Quick revision: microtask vs event queue
+
+| Microtask queue (runs first, drained fully) | Event queue (one event at a time) |
+|---|---|
+| `scheduleMicrotask(fn)` | `Future(fn)` |
+| `Future.microtask(fn)` | `Future.delayed(d, fn)` (including `Duration.zero`) |
+| `.then()` on an **already completed** Future, e.g. `Future.value(x).then(...)` | `Timer(d, fn)` |
+| Continuation after `await` (even if the Future is already complete) | Completion of real I/O (file, network) |
+| | User input (taps, keys) |
+| | Flutter frame callbacks |
+| | Messages from other isolates (ports) |
+
+**Neither queue (runs immediately, synchronously):**
+- `main()` and all plain code
+- `Future.sync(fn)`
+- the body of an `async` function, up to its first `await`
+
+**Memory trick**
+- Microtask = "do this right now, before anything else, I'm already holding the result".
+- Event = "do this when the outside world is ready: a timer, I/O, input, or a frame."
+
+**Order of execution**
+1. sync code
+2. all microtasks
+3. ONE event
+4. all microtasks again
+5. next event, and so on
+
+**Tricky cases to remember**
+- `Future.value(1).then(f)`: microtask (the Future is already complete).
+- `Future(() => 1).then(f)`: the computation runs as an event, so `f` runs after it, not as a separate microtask by default (see my Day 2 experiment).
+- `Future.delayed(Duration.zero, fn)` and `Future(fn)` both go to the event queue, in order of creation.
+- `await` always gives up control, even on a completed Future, and resumes later through a microtask.
+- A microtask scheduled *during* an event runs before the next event.
