@@ -299,3 +299,87 @@ array is already "sorted".
 Takeaway: how I partition equal elements decides the worst case,
 not just which pivot I pick.
 ==================================================
+
+==================================================
+DAY 5 | DATE: 03/11/2026 | CHAPTER 05: Hash Tables
+==================================================
+
+IN MY OWN WORDS
+A hash table stores data as key-value pairs. It is a hash function
+plus an array: the function turns a key (a string or any data) into a
+number, and that number is the slot where the value lives. That is why
+lookup is fast: no searching, I jump straight to the slot.
+
+A hash function must be CONSISTENT: the same input always gives the
+same output. If "apple" gives 3 once, it must give 3 every time,
+otherwise I can't find my item again.
+A good one also spreads different keys across different slots.
+
+Average O(1) for search, insert and delete.
+Used for: fast lookups, avoiding duplicates, caching.
+
+CODE
+Map<String, Integer> ages = new HashMap<>();
+ages.put("Ravi", 24);
+ages.put("Pooja", 23);
+System.out.println(ages.get("Ravi"));    // 24
+
+// duplicate check (voting)
+Map<String, Boolean> voted = new HashMap<>();   // declared outside
+public static void voteSystem(String name) {
+    if (voted.containsKey(name)) System.out.println("Already voted!");
+    else { voted.put(name, true); System.out.println("You can vote!"); }
+}
+
+EXERCISES (consistency)
+5.1 f(x) = 1                 -> consistent, but every key collides
+5.2 f(x) = random()          -> inconsistent, same key gives new results
+5.3 f(x) = next_empty_slot() -> inconsistent, depends on state, not key
+5.4 f(x) = len(x)            -> consistent ("Ravi" is always 4), but all
+                                same-length keys collide
+
+EXERCISES (distribution, table size 10)
+The four functions: (1) always 1, (2) string length, (3) first
+character, (4) sum of prime values % 10.
+5.5 Esther, Ben, Bob, Dan -> function 4
+    length: 6,3,3,3 (Ben/Bob/Dan collide). first char: E,B,B,D
+    (Ben/Bob collide). prime sum % 10: 0,7,3,2, all different.
+5.6 A, AA, AAA, AAAA -> functions 2 and 4
+    length: 1,2,3,4 (different). first char: A,A,A,A (all collide).
+    prime sum % 10: 2,4,6,8 (different).
+5.7 Maus, Fun Home, Watchmen -> functions 3 and 4
+    length: 4,8,8 (Fun Home/Watchmen collide). first char: M,F,W
+    (different). prime sum % 10: 3,7,5 (different).
+(Prime sums ignore spaces and treat upper/lower case the same.)
+
+COLLISIONS
+A collision is when two DIFFERENT keys get the same slot. This is not
+the same as inconsistency (one key giving different answers).
+Fix: chaining. Each slot holds a linked list, so keys that land in the
+same slot sit in the same list. This is the same idea as Chapter 2's
+26-slot array of linked lists.
+Collisions are why a hash function must spread keys evenly. If every
+key lands in one slot, the table becomes one long linked list and
+search drops from O(1) to O(n).
+Also: when the table gets too full (high load factor = items / slots),
+collisions pile up, so the table should resize to more slots.
+The book's rule of thumb is to resize past a load factor of about 0.7
+(check this number in the chapter).
+
+BIG O
+Average: O(1) search, insert, delete (good hash function, low load).
+Worst:   O(n) (everything collides into one slot).
+
+WHAT I USED TO THINK
+I mixed up a collision with an inconsistent hash function in 5.1.
+A collision is two different keys sharing a slot. Inconsistency is the
+same key giving different results. 5.1 was consistent but collided.
+
+CONNECTS TO
+Week 2: int[26] frequency array (a tiny hash table, letter -> slot).
+Week 5: HashMap and HashSet.
+Chapter 2: array of 26 slots, each a linked list (collision handling).
+
+STILL CONFUSING
+(write one real line here, or "nothing" only if it's true)
+==================================================

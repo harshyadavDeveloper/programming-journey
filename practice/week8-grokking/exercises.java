@@ -239,5 +239,26 @@ class Main {
             System.out.println("You can vote!");
         }
     }
+    // 5.4 If we use these four different hash functions to store strings in a hash
+    // table of size 10, which one distributes the strings across the 10 slots most
+    // effectively?
+    // 1. Always return 1 -> Everything goes into one slot -> Very Bad
+    // 2. String length -> Strings of equal length collide -> Poor
+    // 3. First character -> Strings with the same starting character collide ->
+    // Poor
+    // 4. Sum of prime values % 10 -> Considers all characters -> Best among these
+    // four
+
+    // 5.5 A phonebook where the keys are names and values are phone
+    // numbers. The names are as follows: Esther, Ben, Bob, and Dan.
+    // best answer for this will be option 4
+
+    // 5.6 A mapping from battery size to power. The sizes are A, AA, AAA,
+    // and AAAA.
+    // best answer is function 2 and 4
+
+    // 5.7 A mapping from book titles to authors. The titles are Maus, Fun
+    // Home, and Watchmen.
+    // best answer is function 3 and 4
 
 }
