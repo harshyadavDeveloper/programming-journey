@@ -1,7 +1,11 @@
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 class Main {
+    static Map<String, Boolean> voted = new HashMap<>(); // for chapter 5: hashtables
+
     public static void main(String[] args) {
         // int[] arr = { 1, 4, 6, 7, 9, 10 };
         // int target = 4;
@@ -197,4 +201,43 @@ class Main {
     public static int getPivotIndex(int low, int high) {
         return low + (high - low) / 2;
     }
+
+    // Chapter 5: HashTables(HashMap)
+    public static void chapter5() {
+        Map<String, Integer> ages = new HashMap<>();
+        ages.put("Ravi", 24);
+        ages.put("Pooja", 23);
+        System.out.println(ages.get("Ravi"));
+    }
+    // It’s important for hash functions to consistently return the same output
+    // for the same input. If they don’t, you won’t be able to find your item
+    // after you put it in the hash table!
+
+    // Which of these hash functions are consistent?
+    // 5.1 f(x) = 1 Returns 1 for all input
+    // Consistent. because the same input will produce same hash value, it doesnt
+    // matter if the same input will always produces same hash values. Thats an
+    // collision not and inconsistency
+
+    // 5.2 f(x) = random.random() Returns a random number every time
+    // Inconsistent. becasue it return random number everytime so it will produce
+    // different hash values for same input everytime
+
+    // 5.3 f(x) = next_empty_slot() Returns the index of the next
+    // Inconsistent. It returns the index of the next available empty slot. Even
+    // though the input is "Ravi" both times, it returns different indices because
+    // the next empty slot changes. A hash function should calculate the index based
+    // on the input key, not on which slot happens to be empty next.
+    // Consistent. It uses the length of the input string as the index. The same
+    // input "Ravi" always produces 4.
+    public static void voteSystem(String name) {
+
+        if (voted.containsKey(name)) {
+            System.out.println("Kick them out! Already voted.");
+        } else {
+            voted.put(name, true);
+            System.out.println("You can vote!");
+        }
+    }
+
 }
