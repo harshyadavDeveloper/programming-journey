@@ -24,6 +24,31 @@ Output: 16
 // increment and decrement the elements. if we choose the smaller target or a larger target then the median, the totoal distance travlled by all the elements increases 
 // or remains the same. 
 // the median balances the numbers of elements on both the sides, minimizing the sum of absolute differences.  
+
+import java.util.Arrays;
+
 class Solution {
+    public int minMoves2(int[] nums) {
+        Arrays.sort(nums);
+
+        int start = 0;
+        int end = nums.length - 1;
+        int mid = start + (end - start) / 2;
+        int count = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < nums[mid]) {
+                int diff = nums[mid] - nums[i];
+                count += diff;
+            }
+
+            if (nums[i] > nums[mid]) {
+                int diff = nums[i] - nums[mid];
+                count += diff;
+            }
+        }
+
+        return count;
+    }
 
 }
