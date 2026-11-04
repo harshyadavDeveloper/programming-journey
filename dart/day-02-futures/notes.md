@@ -48,7 +48,13 @@
 
 ## Open questions
 
-- When exactly does a `.then` listener on a _pending_ Future run: inline or via a microtask? (testing in Q10)
+## When do .then listeners run? (verified on Dart 3.13.7)
+
+- Listener added to an **already-completed** Future: runs later as a **microtask**.
+- Listener on a **pending** Future: runs **synchronously** when that Future completes, inside the event or microtask that completed it (no extra microtask hop).
+- A chain of `.then` callbacks returning plain values runs back-to-back. Unlike JS, where each `.then` takes its own microtask tick.
+- `Future.value(x)` and `Future.microtask(f)` themselves complete via a microtask.
+- Experiments: `Future(() { scheduleMicrotask(m); }).then(t)` prints `t` then `m`. `Future.value().then(A1).then(A2)` plus `scheduleMicrotask(M)` prints `A1 A2 M`.
 
 ## 60-second recap
 

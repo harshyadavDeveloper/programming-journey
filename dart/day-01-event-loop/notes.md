@@ -88,7 +88,6 @@ Microtasks have strict priority over events, so a never-ending microtask chain s
 
 **Tricky cases to remember**
 - `Future.value(1).then(f)`: microtask (the Future is already complete).
-- `Future(() => 1).then(f)`: the computation runs as an event, so `f` runs after it, not as a separate microtask by default (see my Day 2 experiment).
-- `Future.delayed(Duration.zero, fn)` and `Future(fn)` both go to the event queue, in order of creation.
+- `Future(() => 1).then(f)`: the computation runs as an event, and f runs synchronously right after it in the same event, before any microtask (even one scheduled inside the computation).- `Future.delayed(Duration.zero, fn)` and `Future(fn)` both go to the event queue, in order of creation.
 - `await` always gives up control, even on a completed Future, and resumes later through a microtask.
 - A microtask scheduled *during* an event runs before the next event.
