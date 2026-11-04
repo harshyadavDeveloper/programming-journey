@@ -364,7 +364,6 @@ search drops from O(1) to O(n).
 Also: when the table gets too full (high load factor = items / slots),
 collisions pile up, so the table should resize to more slots.
 The book's rule of thumb is to resize past a load factor of about 0.7
-(check this number in the chapter).
 
 BIG O
 Average: O(1) search, insert, delete (good hash function, low load).
