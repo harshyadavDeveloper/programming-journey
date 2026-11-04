@@ -10,7 +10,7 @@
 // - 0th spell: 5 * [1,2,3,4,5] = [5,10,15,20,25]. 4 pairs are successful.
 // - 1st spell: 1 * [1,2,3,4,5] = [1,2,3,4,5]. 0 pairs are successful.
 // - 2nd spell: 3 * [1,2,3,4,5] = [3,6,9,12,15]. 3 pairs are successful.
-// Thus, [4,0,3] is returned.
+//   Thus, [4,0,3] is returned.
 
 // approach 1: brute force approach. traverse the spells array and for each spell traverse the potions array and check if the product of spell and potion is greater than or equal to success. if yes increment the count. finally add the count to the result array
 // time complexity : O(n*m)
