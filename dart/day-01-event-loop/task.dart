@@ -95,13 +95,12 @@ void main() {
 // If the isolate is busy executing synchronous code, the timer
 // callback cannot execute until the isolate becomes available.
 
-
 // q10. Write a 60-second spoken answer to “How does Dart’s event loop work?” that includes one example from your profile screen’s loading flow.
 // answer: Dart uses an Event Loop to manage synchronous and asynchronous operations within an isolate.
-// First, synchronous code executes on the call stack. Dart has two main queues: the Microtask Queue and the Event Queue. The Microtask Queue has higher priority, 
+// First, synchronous code executes on the call stack. Dart has two main queues: the Microtask Queue and the Event Queue. The Microtask Queue has higher priority,
 // so Dart drains all pending microtasks before processing one event from the Event Queue. After processing an event, it checks the Microtask Queue again.
-// For example, in a Flutter profile screen, when the screen loads, I might call an API using an asynchronous function and await the response. While waiting for the 
+// For example, in a Flutter profile screen, when the screen loads, I might call an API using an asynchronous function and await the response. While waiting for the
 // network operation to complete, the isolate can process other events. Once the response arrives, the Future completes and the code after await resumes asynchronously.
-// One important thing to remember is that timers don't guarantee exact execution times. If the isolate is busy with synchronous code or continuously executing 
+// One important thing to remember is that timers don't guarantee exact execution times. If the isolate is busy with synchronous code or continuously executing
 //microtasks, other events can be delayed.
 // This is how Dart manages asynchronous execution without blocking the isolate while waiting for I/O.
