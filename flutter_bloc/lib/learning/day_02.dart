@@ -323,6 +323,10 @@ output: main build: 1 time
 
 - Because the parent widget doesn't rebuild. BLoC manages the counter state independently, and BlocBuilder listens to state changes and rebuilds only its own UI.
 - context.read() retrieves the nearest CounterBloc from the widget tree without subscribing to its state changes. We use .add() to dispatch an event to that BLoC.
+- No, it can be a StatelessWidget because it doesn't manage its own changing state. BLoC manages the counter state, and BlocBuilder handles the necessary UI rebuilds.
+- Without BlocProvider, accessing the CounterBloc throws a ProviderNotFoundException.
+Ideally, we place BlocProvider above the navigation structure or at the application root if multiple screens need access to the same BLoC.
+If we place it lower in the widget tree, only its descendant widgets can access it. Other screens outside its scope won't be able to access that BLoC.
 
 */
 
