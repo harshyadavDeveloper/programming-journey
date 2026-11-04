@@ -1,6 +1,12 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 class Main {
@@ -20,11 +26,12 @@ class Main {
         // int target = 23;
         // int result = recursiveBinarySearch(arr, 0, arr.length - 1, target);
         // System.out.println("Target index: " + result);
-        int[] arr = { 8, 3, 5, 1, 9, 2, 7 };
+        // int[] arr = { 8, 3, 5, 1, 9, 2, 7 };
 
-        quicksort(arr, 0, arr.length - 1);
+        // quicksort(arr, 0, arr.length - 1);
 
-        System.out.println(Arrays.toString(arr));
+        // System.out.println(Arrays.toString(arr));
+        System.out.println(createSocialNetworkGraph());
 
     }
 
@@ -260,5 +267,65 @@ class Main {
     // 5.7 A mapping from book titles to authors. The titles are Maus, Fun
     // Home, and Watchmen.
     // best answer is function 3 and 4
+
+    // Chapter 6: Breadth First Search
+    // 6.1 Find the length of the shortest path from start to finish.(refer the
+    // diagram in the diagrams folder)
+    // Possible Paths:
+    // 1. S → A → F (2 edges)
+    // 2. S → B → D → F (3 edges)
+    // Shortest path: S → A → F
+    // Shortest path length: 2
+
+    // 6.2 Find the length of the shortest path from cab to bat.
+    // Possible Paths:
+    // 1. cab -> cat -> mat -> bat (3 edges)
+    // 2. cab -> cat -> bat (2 edges)
+    // 3. cab -> car -> cat -> mat -> bat (4 edges)
+    // 4. cab -> car -> bar -> bat (3 edges)
+    // Shortest path: cab -> cat -> bat
+    // shortes path length: 2
+    public static Map<String, List<String>> createSocialNetworkGraph() {
+        Map<String, List<String>> graph = new HashMap<>();
+
+        graph.put("you", Arrays.asList("alice", "bob", "claire"));
+        graph.put("bob", Arrays.asList("anuj", "peggy"));
+        graph.put("alice", Arrays.asList("rekha"));
+        graph.put("claire", Arrays.asList("thom", "jonny"));
+
+        graph.put("anuj", new ArrayList<>());
+        graph.put("peggy", new ArrayList<>());
+        graph.put("rekha", new ArrayList<>());
+        graph.put("thom", new ArrayList<>());
+        graph.put("jonny", new ArrayList<>());
+
+        return graph;
+
+    }
+
+    public static boolean findMangoSeller(Map<String, List<String>> friendsList) {
+        Queue<String> searchQueue = new LinkedList<>();
+        Set<String> searched = new HashSet<>();
+        searchQueue.addAll(friendsList.get("you"));
+
+        while (!searchQueue.isEmpty()) {
+            String person = searchQueue.poll();
+            if (!searched.contains(person)) {
+                searched.add(person);
+                if (isMangoSeller(person)) {
+                    return true;
+                } else {
+                    searchQueue.addAll(friendsList.get(person));
+                }
+            }
+
+        }
+        return false;
+
+    }
+
+    public static boolean isMangoSeller(String name) {
+        return name.endsWith("m");
+    }
 
 }

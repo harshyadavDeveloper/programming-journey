@@ -382,3 +382,104 @@ Chapter 2: array of 26 slots, each a linked list (collision handling).
 STILL CONFUSING
 (write one real line here, or "nothing" only if it's true)
 ==================================================
+
+==================================================
+DAY 6 | DATE: 04/11/2026 | CHAPTER 06: Breadth-First Search
+==================================================
+
+IN MY OWN WORDS
+BFS answers two questions on a graph:
+1. Is there a path from A to B?
+2. What is the shortest path (FEWEST edges) from A to B?
+If a problem asks for "shortest path to X", model it as a graph and
+try BFS.
+
+Graphs: DIRECTED has arrows (rama -> alex: rama owes alex money), and
+the relationship goes one way. UNDIRECTED has no arrows and the
+relationship goes both ways (ross dated rachel, rachel dated ross).
+
+BFS uses a QUEUE (FIFO). It checks all 1st-degree connections before
+2nd-degree ones, in the order they were added. That order is what
+guarantees the shortest path. A stack (LIFO) would dive deep first.
+
+Keep track of people already checked (a visited set). Otherwise I
+re-do work, or loop forever when the graph has a cycle.
+Trees don't need it because they never point back (my father can't
+also be my great-grandfather).
+
+EXAMPLE
+Mango seller: check my friends, then friends of friends, then theirs.
+
+CODE
+public static Map<String, List<String>> createSocialNetworkGraph() {
+        Map<String, List<String>> graph = new HashMap<>();
+
+        graph.put("you", Arrays.asList("alice", "bob", "claire"));
+        graph.put("bob", Arrays.asList("anuj", "peggy"));
+        graph.put("alice", Arrays.asList("rekha"));
+        graph.put("claire", Arrays.asList("thom", "jonny"));
+
+        graph.put("anuj", new ArrayList<>());
+        graph.put("peggy", new ArrayList<>());
+        graph.put("rekha", new ArrayList<>());
+        graph.put("thom", new ArrayList<>());
+        graph.put("jonny", new ArrayList<>());
+
+        return graph;
+
+    }
+
+    public static boolean findMangoSeller(Map<String, List<String>> friendsList) {
+        Queue<String> searchQueue = new LinkedList<>();
+        Set<String> searched = new HashSet<>();
+        searchQueue.addAll(friendsList.get("you"));
+
+        while (!searchQueue.isEmpty()) {
+            String person = searchQueue.poll();
+            if (!searched.contains(person)) {
+                searched.add(person);
+                if (isMangoSeller(person)) {
+                    return true;
+                } else {
+                    searchQueue.addAll(friendsList.get(person));
+                }
+            }
+
+        }
+        return false;
+
+    }
+
+    public static boolean isMangoSeller(String name) {
+        return name.endsWith("m");
+    }
+
+
+EXERCISES
+6.1 shortest path S -> A -> F, length 2
+6.2 cab -> cat -> bat, length 2
+
+BIG O
+O(V + E): every person (vertex) is visited at most once, and every
+connection (edge) is looked at once.
+
+WHAT I USED TO THINK
+I thought having a "searched" set was enough. My first version only
+CHECKED the set (if !searched.contains(person)) but never ADDED anyone
+to it, so it stayed empty forever. The check was always true, and in a
+graph with a cycle (alice -> bob -> alice) the loop would never end.
+
+Fix: add the person to the set as soon as I start processing them
+(searched.add(person)), before looking at their friends.
+
+Lesson: a visited set needs both halves. Check it, AND fill it. The
+condition was right, but the action was missing. Same family of bug as
+the missing return in my recursive binary search.
+
+CONNECTS TO
+Week 6: levelOrder on trees (same queue idea, plus a visited set).
+Week 4: Queue (FIFO) vs Stack (LIFO).
+Week 5: HashSet for "already seen" (O(1) contains).
+Chapter 5: the graph is a HashMap of name -> list of friends.
+
+==================================================
