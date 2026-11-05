@@ -359,16 +359,19 @@ Q8. UNHANDLED ERRORS AND ZONES
 Predict the exact output.
 */
 void q8() {
-  runZonedGuarded(() {
-    Future.delayed(
-      const Duration(milliseconds: 10),
-      () => throw StateError('lost error'),
-    );
-    Future<void>.error('another');
-    print('zone body done');
-  }, (error, stack) {
-    print('zone caught: $error');
-  });
+  runZonedGuarded(
+    () {
+      Future.delayed(
+        const Duration(milliseconds: 10),
+        () => throw StateError('lost error'),
+      );
+      Future<void>.error('another');
+      print('zone body done');
+    },
+    (error, stack) {
+      print('zone caught: $error');
+    },
+  );
 }
 /*
 Questions:
