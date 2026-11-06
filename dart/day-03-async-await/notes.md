@@ -1,56 +1,31 @@
-# Day 03: async / await and Error Handling
+## Interview Q&A (Day 3)
 
-## What async guarantees
+**Does async make code parallel? Why can the UI freeze?**
+- No. `async` lets a function pause at `await` so the single thread can do other work while waiting for I/O. It doesn't add threads.
+- Code between awaits runs on the UI thread. Heavy parsing or loops block the event loop and drop frames (about 16 ms budget per frame at 60 Hz).
+- Fix: move heavy work to another isolate (`Isolate.run`, `compute`).
+- `Future.wait` overlaps waiting (I/O concurrency), not CPU work.
 
-- Return type is `Future<T>`. `return x` completes it with `x`. Returning a Future adopts it (no `Future<Future<int>>`). `throw` completes it with an error.
-- The body runs **synchronously until the first `await`**.
-- Errors never escape the call synchronously. An async function that throws hands you a Future completed with that error.
+**then() vs async/await**
+- Both work with Futures. `async/await` reads sequentially, and errors are thrown at the `await`, so `try`/`catch`/`finally` work normally.
 
-## How await works
+**Timeout + error handling**
+- `await fetch().timeout(Duration(seconds: 2))` throws `TimeoutException`. Put `on TimeoutException` before the generic `catch`. Put cleanup in `finally`.
+- A timeout does **not** cancel the underlying request. It keeps running.
 
-- An async function is compiled into a **state machine**. Its locals and position are saved on the heap, so it pauses without any thread. `await` does not block.
-- `await e`: evaluate `e`. If it is a Future, register the rest of the function as a **listener** on it. If it is a plain value, treat it as already complete. Then suspend and return the function's own pending Future to the caller.
-- When the awaited Future completes: a value becomes the result of the `await`, and an error is **thrown at the await**, so `try`/`catch` works.
-- **Resume rule:**
-  - awaiting a **pending** Future: the continuation runs **synchronously at the moment that Future completes** (inside the event or microtask that completed it).
-  - awaiting an **already-completed** Future or a **plain value** (`await null`): it resumes through a **microtask**.
+**FutureBuilder bug**
+- Calling the API in `future:` inside `build()` creates a new Future on every rebuild, so the request repeats.
+- Fix: store the Future in a field set in `initState` (or load in the controller and read it with state management).
 
-## try / catch / finally
+**API call in initState**
+- Leaving the screen before the response arrives, then calling `setState`, causes a "setState after dispose" error. Check `mounted` after every `await`.
+- Use `isLoading` and `error` fields, `try`/`catch` for failures, and `finally` to reset the loading state.
 
-- `finally` is the right place for cleanup (e.g. hiding a loader). It runs on success and on error.
-- `rethrow` keeps the original stack trace. `throw e` resets it.
-- Catch specific types with `on SomeError catch (e)`.
+**Unhandled async errors**
+- Plain Dart: terminates the program. Flutter: logged and the app keeps running.
+- Global hooks: `FlutterError.onError` (framework errors) and `PlatformDispatcher.instance.onError` (uncaught async errors). Report to Crashlytics or Sentry.
 
-## Four traps
-
-- **A. Missing `await`:** `try { boom(); } catch ...` does not catch it. The call returns a Future immediately and the error ends up **unhandled** (crashes a plain Dart program, goes to the zone handler).
-- **B. `return fut` vs `return await fut` inside `try`:** without `await`, the try block finishes as soon as it hands back the Future, so the local `catch` is skipped. The error is **not lost**: it reaches the caller through the returned Future. Use `return await fut` when the local `catch` must cover it.
-- **C. Async throw vs sync throw:** a non-async function that returns a Future but throws before returning throws **at the call**, so `.catchError(...)` never gets attached. An `async` function never throws at the call.
-- **D. `forEach` with async callback:** `forEach` ignores the returned Futures, so the code after it runs before any callback finishes. Use `for (final x in list) { await save(x); }` for sequential work, or `await Future.wait(list.map(save))` for concurrent work.
-
-## Unhandled errors and Zones
-
-- A **Zone** is the execution context every callback and Future belongs to. It controls scheduling and where uncaught errors go.
-- An error from a Future that nobody handles goes to the current zone. In plain Dart, the root zone terminates the program ("Unhandled exception").
-- `runZonedGuarded(body, onError)` catches uncaught async errors from its body.
-- Flutter hooks:
-  - `FlutterError.onError`: errors inside the framework (build, layout, paint, gestures).
-  - `PlatformDispatcher.instance.onError`: uncaught async errors. Send them to Crashlytics or Sentry here.
-- `unawaited(future)` (`dart:async`) marks a fire-and-forget Future on purpose. Turn on the `unawaited_futures` lint.
-
-## Where it shows up in my work
-
-- `use_build_context_synchronously`: at an `await`, other events run, so the widget may be disposed when the function resumes. Check `mounted` before using the context.
-- `isLoading = false` in `finally`, so the loader turns off even after an error.
-
-## Open questions
-
--
-
-## 60-second recap
-
-- `async` returns a Future, runs synchronously until the first `await`, and turns `throw` into an error inside the Future.
-- `await` registers the rest of the function as a listener. Pending Future: resumes when it completes. Already-completed or plain value: resumes via a microtask.
-- No thread is used, because the paused function lives on the heap as a state machine.
-- Traps: missing `await`, `return fut` inside `try`, sync vs async throw, `forEach` with async.
-- Unhandled async errors go to the zone. Flutter: `PlatformDispatcher.instance.onError`.
+**Future<void> vs void async**
+- `Future<void>`: the caller can `await` it and catch its errors.
+- `void foo() async`: fire-and-forget. The caller can't wait for it, and errors become unhandled. The `avoid_void_async` lint flags it.
+- The exception: event handlers like `onPressed: () async {...}` are fine, since the callback type is `void`.
