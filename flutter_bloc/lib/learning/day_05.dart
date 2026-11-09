@@ -85,8 +85,12 @@ The UI therefore does not rebuild to show item 2 or item 3.
 
 - List.from() creates a separate list object containing the same elements.
 
-This prevents modifications to tempFavouriteList from affecting the list stored in the previous state. Equatable can now detect the difference between the old and 
+- This prevents modifications to tempFavouriteList from affecting the list stored in the previous state. Equatable can now detect the difference between the old and 
 new list contents, allowing BLoC to emit the new state.
+
+- Day 02, Q3 — The Frozen Counter.
+Both problems happen because existing state data is mutated instead of preserved. The solution is to maintain immutable state and emit new state snapshots
+ whenever data changes.
 */
 
 
