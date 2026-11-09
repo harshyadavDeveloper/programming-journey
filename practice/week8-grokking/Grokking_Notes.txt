@@ -483,3 +483,44 @@ Week 5: HashSet for "already seen" (O(1) contains).
 Chapter 5: the graph is a HashMap of name -> list of friends.
 
 ==================================================
+
+==================================================
+DAY 7 | DATE: 05/11/2026 | CHAPTER 07: Trees
+==================================================
+
+IN MY OWN WORDS
+A tree is a special kind of graph: connected, with NO cycles. Because
+nothing points back, a tree needs no "visited" set (unlike BFS on a
+general graph).
+
+A binary tree is a tree where each node has AT MOST 2 children.
+
+Depth-first search (DFS) is another way to traverse a graph or tree. It
+goes all the way down one branch before backing up and trying the next.
+It can find a path, but it can't guarantee the SHORTEST one, because
+the first path it finds may be long while a shorter one sits on another
+branch. For shortest path (fewest edges), use BFS.
+
+CODE
+(nothing new. My Week 6 traversals already cover this.)
+
+BFS vs DFS (side by side)
+BFS: explores level by level, uses a QUEUE, finds the fewest-edges path.
+DFS: explores one branch to the bottom first, uses a STACK (or
+     recursion, which uses the call stack), does not guarantee shortest.
+
+BIG O
+Both visit every node/edge once: O(V + E) on a graph.
+
+WHAT I USED TO THINK
+(nothing wrong this time. Add a line only if something was corrected.)
+
+CONNECTS TO
+Week 6: in/pre/post-order are DFS. levelOrder is BFS.
+Week 4: stack (LIFO) vs queue (FIFO). That's the difference between DFS
+and BFS.
+Week 6 Day 4: a BST is a binary tree with an ordering rule, and it can
+still degrade into a chain.
+
+STILL CONFUSING
+==================================================
