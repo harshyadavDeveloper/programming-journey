@@ -76,7 +76,17 @@ Questions:
 - Which Day 02 question is this a cousin of?
 
 Your answer:
+- No, the first emission is not dropped. The list gets item 1, so the new state has different list contents from the current state. Equatable detects the difference
+ and allows the emission.
 
+- After the first emission, both tempFavouriteList and the current BLoC state reference the same list object.
+When item 2 is added, the existing state's list is also modified. Equatable compares the current and new states, finds them equal, and suppresses the emission.
+The UI therefore does not rebuild to show item 2 or item 3.
+
+- List.from() creates a separate list object containing the same elements.
+
+This prevents modifications to tempFavouriteList from affecting the list stored in the previous state. Equatable can now detect the difference between the old and 
+new list contents, allowing BLoC to emit the new state.
 */
 
 
