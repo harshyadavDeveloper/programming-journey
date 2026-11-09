@@ -257,6 +257,12 @@ ImagePickerUtils() creates the actual object.
 That object is passed to ImagePickerBloc.
 BlocProvider provides the Bloc to its child widget tree
 
+- Because these events only communicate which action the user wants to perform.
+GalleryPickedEvent tells the Bloc to open the gallery.
+CameraCapturedEvent tells the Bloc to open the camera.
+
+The actual image is obtained later through ImagePickerUtils.
+We don't need to pass any additional data because the utility handles the image selection.
 */
 
 void main() {}

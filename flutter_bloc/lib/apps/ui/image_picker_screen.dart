@@ -19,50 +19,48 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Image Picker Screen')),
       body: Center(
-  child: BlocBuilder<ImagePickerBloc, ImagePickerState>(
-    builder: (context, state) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          state.file == null
-              ? const CircleAvatar(
-                  child: Icon(Icons.camera),
-                )
-              : Image.file(File(state.file!.path)),
+        child: BlocBuilder<ImagePickerBloc, ImagePickerState>(
+          builder: (context, state) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                state.file == null
+                    ? const CircleAvatar(child: Icon(Icons.camera))
+                    : Image.file(File(state.file!.path)),
 
-          const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  context.read<ImagePickerBloc>().add(
-                    CaptureImageFromCamera(),
-                  );
-                },
-                icon: const Icon(Icons.camera_alt),
-                label: const Text('Camera'),
-              ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<ImagePickerBloc>().add(
+                          CaptureImageFromCamera(),
+                        );
+                      },
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text('Camera'),
+                    ),
 
-              const SizedBox(width: 15),
+                    const SizedBox(width: 15),
 
-              ElevatedButton.icon(
-                onPressed: () {
-                  context.read<ImagePickerBloc>().add(
-                    PickImageFromGallery(),
-                  );
-                },
-                icon: const Icon(Icons.photo_library),
-                label: const Text('Gallery'),
-              ),
-            ],
-          ),
-        ],
-      );
-    },
-  ),
-),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<ImagePickerBloc>().add(
+                          PickImageFromGallery(),
+                        );
+                      },
+                      icon: const Icon(Icons.photo_library),
+                      label: const Text('Gallery'),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }
