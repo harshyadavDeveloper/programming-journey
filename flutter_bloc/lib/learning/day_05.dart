@@ -93,7 +93,6 @@ Both problems happen because existing state data is mutated instead of preserved
  whenever data changes.
 */
 
-
 /*
 ========================================================
 Q2. buildWhen WITH LIST FIELDS
@@ -127,9 +126,29 @@ Questions:
   help? Why or why not?
 
 Your answer:
+8 times.
+- 1 initial build.
+- 1 after fetch completes.
+- 3 times when selecting items 1, 2 and 3.
+- 1 time when favouriting item 1.
+- 3 times when unselecting items 3, 2 and 1.
+
+buildWhen: (previous, current) =>
+    previous.tempFavouriteItemList.isEmpty !=
+    current.tempFavouriteItemList.isEmpty,
+Builder runs: 3 times.
+1 initial build.
+1 when the first item is selected (icon becomes visible).
+1 when the last selected item is unselected (icon becomes hidden).
+
+- Not necessarily. Dart lists use identity-based equality by default, not content-based equality.
+If the BLoC creates a new list for every state update, this condition will be true even if the list contains the same elements.
+
+- It can help avoid unnecessary rebuilds, but we must be careful.
+The main list depends on both favouriteItemList and tempFavouriteItemList. Checkbox selection changes the temporary list, and favouriting an item changes the favourite list.
+So buildWhen must account for both changes. Otherwise, the UI may not reflect the latest state.
 
 */
-
 
 /*
 ========================================================
@@ -163,9 +182,19 @@ Questions:
   (Hint: Day 03 Q3.)
 
 Your answer:
+- The checkbox becomes unchecked.
+FavouriteItemModel uses Equatable. After tapping the heart, a new model is created with a different isFavourite value.
+Since the old and new models are not equal, contains(item) returns false.
+
+-Item 2 will not be deleted from the main favourite list because it is no longer present in the temporary selected list.
+The stale old copy remains in tempFavouriteList, but it doesn't match the updated item.
+
+- Yes. Because both old and new models have the same id, Equatable considers them equal. However, the UI still receives the updated favouriteItemList containing the new model 
+with the flipped isFavourite value.
+
+- Therefore, the heart icon updates, but equality-based comparisons cannot distinguish the old and new versions based on isFavourite
 
 */
-
 
 /*
 ========================================================
@@ -189,6 +218,12 @@ Questions:
 video.)
 
 Your answer:
+- The user continues seeing the CircularProgressIndicator (loader) because the default status is ListStatus.loading.
+- No. Even though the UI has a ListStatus.faliure case, the BLoC never emits that status when the exception occurs.
+- Defining a status in an enum or state doesn't automatically activate it.
+The BLoC must explicitly emit the corresponding state for the UI to react to it.
+
+The UI responds to emitted states, not merely to the states defined in the enum.
 
 */
 
