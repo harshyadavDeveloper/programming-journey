@@ -581,7 +581,4 @@ keeps it balanced as I insert.
 Week 6 Task 91: height decides search cost.
 Chapter 2: array vs linked list tradeoffs.
 
-STILL CONFUSING
-(write one real line. A good one: what exactly does a rotation change,
-and why does it keep the BST order intact?)
 ==================================================
