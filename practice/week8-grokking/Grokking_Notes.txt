@@ -524,3 +524,64 @@ still degrade into a chain.
 
 STILL CONFUSING
 ==================================================
+
+==================================================
+DAY 8 | DATE: 06/11/2026 | CHAPTER 08: Balanced Binary Trees
+==================================================
+
+IN MY OWN WORDS
+Compared with a sorted array (fast search, slow insert) and a linked
+list (fast insert, slow search), a balanced BST gets O(log n) for BOTH
+search and insert.
+
+An unbalanced BST can turn into a chain (like my 1,2,3,4,5 inserts),
+and then everything is O(n). The cost depends on HEIGHT.
+
+AVL tree: a self-balancing BST. Each node tracks its height or a
+balance factor = height(left) - height(right). It must stay in
+-1, 0 or 1. If a node goes below -1 or above 1, the tree rebalances
+itself by rotating nodes.
+
+Splay tree: when I look up a node, rotations bring it to the root. Items
+I used recently stay near the top and are fast to find again. It isn't
+strictly balanced, so one operation can be slow, but over many
+operations the average cost is still O(log n).
+
+B-tree: a generalised BST. Each node holds MULTIPLE keys and has
+multiple children. All leaves sit at the same depth. It's built for
+disks and databases, where the slow part is the seek (the trip to the
+store), not the reading. So one trip reads a lot of data at once, and
+fewer trips are needed.
+
+EXAMPLE
+Grocery analogy: a seek is a trip to the store. Better to buy a lot per
+trip than make many trips for one item each. B-trees read more per trip.
+
+TRACE
+Insert 1, 2, 3 into a plain BST (a chain).
+Balance factor at node 1 = height(left) - height(right) =
+(fill in: use null = -1) -> it is outside [-1, 1], so it needs a rotation.
+After the rotation the root becomes ___ and the tree is balanced.
+
+BIG O
+AVL: search, insert, delete are O(log n) GUARANTEED in the worst case
+(plain BST worst case is O(n)).
+Splay: amortized O(log n).
+B-tree: O(log n) in height, but the key win is fewer disk reads.
+
+WHAT I USED TO THINK
+I knew a BST could degrade into a chain (Week 6 Day 4) but had no fix.
+An AVL tree is the fix: same BST, plus a rebalancing step after
+inserts and deletes.
+
+CONNECTS TO
+Week 6 Day 4: isBalanced used this same "difference of 1" rule.
+Week 6 Task 92: built a balanced tree once from sorted data. AVL
+keeps it balanced as I insert.
+Week 6 Task 91: height decides search cost.
+Chapter 2: array vs linked list tradeoffs.
+
+STILL CONFUSING
+(write one real line. A good one: what exactly does a rotation change,
+and why does it keep the BST order intact?)
+==================================================
