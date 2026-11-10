@@ -126,7 +126,7 @@ Questions:
   help? Why or why not?
 
 Your answer:
-8 times.
+9 times.
 - 1 initial build.
 - 1 after fetch completes.
 - 3 times when selecting items 1, 2 and 3.

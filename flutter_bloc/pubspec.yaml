@@ -38,6 +38,7 @@ dependencies:
   bloc: ^9.2.1
   flutter_bloc: ^9.1.1
   image_picker: ^1.2.2
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:
