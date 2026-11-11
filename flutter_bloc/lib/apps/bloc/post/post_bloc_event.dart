@@ -6,3 +6,8 @@ abstract class PostBlocEvent extends Equatable {
 }
 
 class PostFetched extends PostBlocEvent {}
+
+class SearchItem extends PostBlocEvent {
+  final String searchTerm;
+  SearchItem(this.searchTerm);
+}

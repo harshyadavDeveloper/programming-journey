@@ -27,19 +27,37 @@ class _PostScreenState extends State<PostScreen> {
         builder: (context, state) {
           switch (state.postStatus) {
             case PostStatus.loading:
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             case PostStatus.failure:
-              return Text(state.errorMessage.toString());
+              return Center(child: Text(state.errorMessage.toString()));
             case PostStatus.success:
-              return ListView.builder(
-                itemCount: state.postList.length,
-                itemBuilder: (context, index) {
-                  final item = state.postList[index];
-                  return ListTile(
-                    title: Text(item.name.toString()),
-                    subtitle: Text(item.email.toString()),
-                  );
-                },
+              return Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Search by email',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (val) {
+                      context.read<PostBloc>().add(SearchItem(val));
+                      print(state.tempPostList.length);
+                    },
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.tempPostList.isEmpty
+                          ? state.postList.length
+                          : state.tempPostList.length,
+                      itemBuilder: (context, index) {
+                        final item = state.postList[index];
+                        return ListTile(
+                          title: Text(item.name.toString()),
+                          subtitle: Text(item.email.toString()),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               );
           }
         },
