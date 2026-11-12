@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blocs/apps/bloc/post/post_bloc.dart';
 import 'package:flutter_blocs/apps/bloc/post/post_bloc_event.dart';
 import 'package:flutter_blocs/apps/bloc/post/post_bloc_state.dart';
+import 'package:flutter_blocs/models/post_model.dart';
 import 'package:flutter_blocs/utils/enums.dart';
 
 class PostScreen extends StatefulWidget {
@@ -44,18 +45,23 @@ class _PostScreenState extends State<PostScreen> {
                     },
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: state.tempPostList.isEmpty
-                          ? state.postList.length
-                          : state.tempPostList.length,
-                      itemBuilder: (context, index) {
-                        final item = state.postList[index];
-                        return ListTile(
-                          title: Text(item.name.toString()),
-                          subtitle: Text(item.email.toString()),
-                        );
-                      },
-                    ),
+                    child: state.searchMessage.isNotEmpty
+                        ? Center(child: Text(state.searchMessage.toString()))
+                        : ListView.builder(
+                            itemCount: state.tempPostList.isEmpty
+                                ? state.postList.length
+                                : state.tempPostList.length,
+                            itemBuilder: (context, index) {
+                              PostModel item = state.postList[index];
+                              if (state.tempPostList.isNotEmpty) {
+                                item = state.tempPostList[index];
+                              }
+                              return ListTile(
+                                title: Text(item.name.toString()),
+                                subtitle: Text(item.email.toString()),
+                              );
+                            },
+                          ),
                   ),
                 ],
               );

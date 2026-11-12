@@ -11,7 +11,7 @@ class PostBloc extends Bloc<PostBlocEvent, PostBlocState> {
 
   PostBloc(this._postRepository) : super(const PostBlocState()) {
     on<PostFetched>(fetchPostHandler);
-     on<SearchItem>(_filterList);
+    on<SearchItem>(_filterList);
   }
 
   Future<void> fetchPostHandler(
@@ -37,12 +37,30 @@ class PostBloc extends Bloc<PostBlocEvent, PostBlocState> {
     }
   }
 
-  void _filterList(SearchItem event, Emitter<PostBlocState> emit){
-    tempPostList = state.postList.where((ele) => ele.id.toString() == event.searchTerm.toString()).toList();
-
-  print('Search term: ${event.searchTerm}');
-  print('Original list: ${state.postList.length}');
-  print('Filtered list: ${tempPostList.length}');
-    emit(state.copyWith(tempPostList: tempPostList));
+  void _filterList(SearchItem event, Emitter<PostBlocState> emit) {
+    if (event.searchTerm.isEmpty) {
+      emit(state.copyWith(tempPostList: [], searchMessage: ''));
+    } else {
+      // tempPostList = state.postList
+      //     .where((ele) => ele.email == event.searchTerm.toString())
+      //     .toList();
+      tempPostList = state.postList
+          .where(
+            (ele) => ele.email.toString().toLowerCase().contains(
+              event.searchTerm.toLowerCase(),
+            ),
+          )
+          .toList();
+      if (tempPostList.isEmpty) {
+        emit(
+          state.copyWith(
+            tempPostList: tempPostList,
+            searchMessage: 'No Data Found',
+          ),
+        );
+      } else {
+        emit(state.copyWith(tempPostList: tempPostList, searchMessage: ''));
+      }
+    }
   }
 }
