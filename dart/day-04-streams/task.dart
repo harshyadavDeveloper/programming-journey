@@ -22,6 +22,15 @@ Cover:
 - How do you stop listening?
 
 Your answer:
+A Stream in Dart is a sequence of asynchronous events that are delivered over time. It can emit three types of events: data, error, and done.
+Unlike a Future, which delivers a single result or error, a Stream can deliver multiple values over time.
+Dart has two types of streams:
+- Single-subscription: Allows only one listener. Once subscribed, another listener cannot be added.
+- Broadcast: Allows multiple listeners, but listeners only receive events emitted while they are subscribed.
+We can create streams using StreamController, async* with yield, or Stream.periodic.
+To consume a stream, we can use listen(), which provides callbacks like onData, onError, and onDone.
+We can also use await for to consume stream events sequentially inside an asynchronous function.
+Finally, we can manage a stream subscription using pause(), resume(), and cancel(). Calling cancel() stops listening to the stream.
 
 */
 
@@ -43,6 +52,13 @@ Questions:
   tell the interviewer about?
 
 Your answer:
+- The error occurs because a normal StreamController creates a single-subscription stream by default, which allows only one listener. When both widgets try to 
+listen to the same stream, the second subscription throws a Bad State exception.
+- There are two ways to solve this:
+First, we can use a broadcast stream by calling .broadcast() on the StreamController, which allows multiple listeners.
+Second, we can maintain a single subscription in a shared controller or parent widget and distribute the received data to both widgets using state management.
+- However, the catch with broadcast streams is that they don't buffer events. If a listener subscribes after an event has already been emitted, it won't receive 
+that previous event. It only receives future events while subscribed.
 
 */
 
@@ -75,10 +91,19 @@ Questions:
 - Does the listener run inside add(), or later? Why does
   'end of ...' appear where it does?
 
-predicted:
-actual:
 Your answer:
+output: for q3a: end of q3a
+                 listener: 1
+                 listener: 2
+                 listener: 3
 
+output: for q3b: end of q3b
+            listener: 3
+
+Single-subscription: If we add events before attaching a listener, those events are stored. When the listener attaches, it receives those stored events too.
+Broadcast: If we add events before attaching a listener, those events are lost. The listener only receives new events after it subscribes.
+Why does print('end') come first? Because add() doesn't execute the listener immediately. It schedules the event to be delivered later. 
+Meanwhile, normal synchronous code continues executing.
 */
 
 /*
