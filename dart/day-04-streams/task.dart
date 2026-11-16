@@ -130,9 +130,16 @@ Questions:
   Is onDone still called?
 - How does an error behave inside an await for loop?
 
-predicted:
-actual:
 Your answer:
+output: 
+data: hi
+error: oops
+data: bye
+done
+
+By default, an error doesn't stop a Dart stream. We can handle it using the onError callback, and the stream continues receiving events. If we set cancelOnError 
+to true, the subscription is cancelled on the first error, and onDone is not called. With await for, an error is thrown and terminates the loop, so we handle
+it using try-catch
 
 */
 
@@ -158,14 +165,42 @@ Then answer:
 Write your code below:
 */
 Stream<int> countdown(int from) async* {
-  // write code here
+  try {
+    for (int i = from; i >= 1; i--) {
+      await Future.delayed(Duration(seconds: 1));
+      yield i;
+    }
+  } finally {
+    print('countdown cleanup');
+  }
 }
 
 Future<void> q5() async {
-  // consume it two ways here
+  await for (int num in countdown(5)) {
+    print(num);
+  }
+  late StreamSubscription<int> subscription;
+  int count = 0;
+
+  subscription = countdown(5).listen((n) {
+    print(n);
+    count++;
+
+    if (count == 2) {
+      subscription.cancel();
+    }
+  });
 }
+
 /*
 Your answer:
+- The code starts running when someone subscribes to the stream, not when we simply call countdown(5).
+- With await for: After the countdown finishes naturally (after printing 1).
+- With listen(): When we cancel the subscription (in our example, after receiving the second value).
+The finally block runs in both cases.
+- async* makes creating streams easier. We can use normal loops, await, and yield to generate values.
+With StreamController, we have to manually add events using add() and close the controller using close().
+For something like a countdown, async* is simpler and requires less code.
 
 */
 
@@ -192,7 +227,43 @@ Questions:
 - Does StreamBuilder cancel its subscription for you?
 
 Your answer:
+- StreamBuilder is a Flutter widget that listens to a Stream and rebuilds its UI whenever new data arrives.
+- We should avoid creating a new stream directly inside the build method because build can execute multiple times, which may create unnecessary 
+streams and subscriptions. Instead, we should create the stream once, for example in initState(), and reuse it.
 
+- Using AsyncSnapshot, we can handle loading, error and data states. Before the first event, we can show a loading indicator using ConnectionState.waiting. Before 
+the first event here it will show null becasue then snapshot.hasData is false.
+
+- StreamBuilder also manages its subscription automatically. It cancels the subscription when the widget is disposed or when the stream changes. 
+
+class CounterWidget extends StatefulWidget {
+  const CounterWidget({super.key});
+
+  @override
+  State<CounterWidget> createState() => _CounterWidgetState();
+}
+
+class _CounterWidgetState extends State<CounterWidget> {
+  late final Stream<int> counterStream;
+
+  @override
+  void initState() {
+    super.initState();
+
+    counterStream =
+        Stream.periodic(const Duration(seconds: 1), (i) => i);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<int>(
+      stream: counterStream,
+      builder: (context, snapshot) {
+        return Text('${snapshot.data}');
+      },
+    );
+  }
+}
 */
 
 /*
@@ -219,6 +290,38 @@ Questions:
   in dispose()?
 
 Your answer:
+- When manually listening to a stream inside a StatefulWidget, we should store the StreamSubscription so that we can cancel it when the widget is disposed
+Otherwise, the subscription may continue receiving events after the screen is removed, potentially causing memory leaks or setState called after dispose errors
+
+- I store the subscription in initState and cancel it in dispose. I can also check the mounted property before calling setState to ensure the widget is still active.
+- If I own the StreamController, I should also close it in dispose. However, I should not close a controller owned by another service
+
+
+class _ChatState extends State<Chat> {
+  StreamSubscription<String>? _subscription;
+
+  final List<String> messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _subscription = chatService.messages.listen((m) {
+      if (!mounted) return;
+
+      setState(() {
+        messages.add(m);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+}
+
 
 */
 
@@ -231,6 +334,20 @@ Q8. FUTURE OR STREAM?
 three where you'd use a Future. How would you decide?"
 
 Your answer:
+In Flutter, I use a Future when I expect a single result from an asynchronous operation, and a Stream when I expect multiple values or continuous updates over time.
+Future examples:
+1. Fetching dashboard data from an API.
+2. Adding a new user to the database.
+3. Performing an add-to-cart API request. 
+
+In all these cases, the operation completes with a single result.
+
+Stream examples:
+1. Chat applications, where new messages arrive continuously.
+2. Live location tracking, where location updates are received continuously.
+3. Real-time database updates, where I need to listen for changes in data.
+
+I decide based on how the data is delivered. If I need one asynchronous result, I use Future. If I need to listen for multiple values over time, I use Stream
 
 */
 
@@ -238,11 +355,6 @@ Your answer:
 ========================================================
 END OF DAY 04 — REFLECTION
 ========================================================
-
-1. Which of these questions could you answer confidently
-   in an interview?
-2. Which one made you hesitate?
-3. What would you want me to cover more of next?
 
 ========================================================
 */
