@@ -6,7 +6,7 @@ import 'package:flutter_blocs/apps/bloc/counter/counter_bloc.dart';
 import 'package:flutter_blocs/apps/bloc/favourite_app/favourite_app_bloc.dart';
 import 'package:flutter_blocs/apps/bloc/post/post_bloc.dart';
 import 'package:flutter_blocs/apps/bloc/switch/switch_bloc.dart';
-import 'package:flutter_blocs/apps/ui/post_screen.dart';
+import 'package:flutter_blocs/apps/ui/login_screen.dart';
 import 'package:flutter_blocs/repository/favourite_repository.dart';
 import 'package:flutter_blocs/repository/post_repository.dart';
 import 'package:flutter_blocs/utils/image_picker.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         themeMode: ThemeMode.dark,
         theme: ThemeData(brightness: Brightness.dark, useMaterial3: true),
-        home: const PostScreen(),
+        home: const LoginScreen(),
       ),
     );
   }
