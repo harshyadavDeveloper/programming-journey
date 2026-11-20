@@ -582,3 +582,45 @@ Week 6 Task 91: height decides search cost.
 Chapter 2: array vs linked list tradeoffs.
 
 ==================================================
+
+==================================================
+DAY 9 | DATE: 08/11/2026 | CHAPTER 09: Dijkstra's Algorithm
+==================================================
+
+IN MY OWN WORDS
+Dijkstra finds the CHEAPEST path (lowest total weight) in a weighted
+graph with non-negative weights. BFS only counts edges; Dijkstra adds
+up weights. For negative weights use Bellman-Ford (out of scope).
+
+Setup: costs map (unreached nodes = infinity = Long.MAX_VALUE), a
+parents map to rebuild the path, and a processed set.
+
+Loop:
+1. Pick the cheapest UNPROCESSED node.
+2. For each neighbour: newCost = (cost to this node) + (edge weight).
+   If newCost < the old cost, update the cost and set the parent to
+   this node.
+3. Mark the node as processed.
+4. Repeat until no unprocessed reachable node is left.
+Then follow the parents backwards from the finish, and reverse it.
+
+Why it works: with non-negative weights, the cheapest unprocessed node
+can't be reached any cheaper another way, so its cost is final.
+
+
+BIG O
+My findLowestCost scans every node each round, so this version is
+O(V^2). Using a priority queue (min-heap) can speed this up.
+(check whether the book says this)
+
+WHAT I USED TO THINK
+(write the bug here: which variable I checked against `processed`,
+what the loop did, how the trace showed it)
+
+CONNECTS TO
+Chapter 6: BFS is the same idea, but fewest edges instead of cheapest.
+Chapter 5: costs, parents and processed use HashMap and HashSet.
+Week 2: tracking a "lowest so far" is my min-finding pattern.
+
+STILL CONFUSING
+==================================================
