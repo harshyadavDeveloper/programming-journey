@@ -1,4 +1,5 @@
 import 'dart:async';
+
 // q1. What are the two queues in a Dart isolate, and what is the exact priority rule between them? Give one similarity and one
 // difference compared with the JavaScript event loop.
 // answer: Dart has two main queues: the Microtask Queue and the Event Queue. The Microtask Queue has higher priority, so Dart processes all pending microtasks before

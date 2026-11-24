@@ -118,9 +118,8 @@ Future<String> fetchUser({bool fail = false}) async {
 
 Future<void> loadUser({bool fail = false}) async {
   try {
-    final name = await fetchUser(
-      fail: fail,
-    ).timeout(const Duration(seconds: 2));
+    final name = await fetchUser(fail: fail)
+        .timeout(const Duration(seconds: 2));
 
     print('Hello $name');
   } on TimeoutException {
