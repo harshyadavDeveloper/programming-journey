@@ -95,3 +95,15 @@ final (stats, info, docs) = await (safe(fetchStats), safe(fetchInfo), safe(fetch
 **Tightened answer:**
 
 > It's a race condition. Responses can come back out of order, so a slow request for `a` can arrive after the one for `aab` and overwrite it. Debounce waits for a pause in typing before firing, which reduces requests but doesn't fix this, because requests already in flight can still finish out of order. To fix it I'd compare the response's query with the latest one and ignore it if they differ, or use `switchMap` or Bloc's `restartable()`, which drop the older work. The old HTTP request still runs unless the client supports cancellation. Throttle limits a function to at most once per interval, so it suits scroll events and spam-prone buttons, but not a search box, since the final query might get dropped.
+
+## Q8. Isolate vs thread; communication; limits
+
+**My answer (summary):** Isolate = own memory + own event loop; threads share memory. Communicate via ports with copied messages, so no locks/races. Can't access outer variables (send values instead). Sendable: int, String, double, list, map, large binary data. Not widgets/BuildContext. Communication isn't synchronous.
+
+**Missing:** name `SendPort`/`ReceivePort`, own copy of globals, copy cost, no UI/`rootBundle`/limited plugins, native-resource objects unsendable.
+
+**Tightened answer:**
+
+> An isolate is Dart's unit of concurrency. It has its own memory heap and its own event loop, and nothing is shared with other isolates. A thread, by contrast, shares memory with other threads, which is why threads need locks and can have data races. Isolates communicate only by sending messages through ports: a `SendPort` sends and a `ReceivePort` receives. The messages are copied, so there's no shared state to lock. The limits follow from that: an isolate can't read the main isolate's variables, it has its own copy of globals, communication is asynchronous, and copying big messages has a cost. I can send primitives, strings, lists, maps and most objects, but not objects holding native resources, and I never pass widgets or `BuildContext`. A spawned isolate also can't do UI work or use `rootBundle`.
+
+---
