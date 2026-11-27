@@ -328,4 +328,91 @@ class Main {
         return name.endsWith("m");
     }
 
+    // Chapter 10: Greedy Algorithm
+    // 10.1: You work for a furniture company, and you have to ship furniture
+    // all over the country. You need to pack your truck with boxes. All
+    // the boxes are of different sizes, and you’re trying to maximize
+    // the space you use in each truck. How would you pick boxes to
+    // maximize space? Come up with a greedy strategy. Will that give
+    // you the optimal solution?
+    // answer: Sort all boxes in descending order of size. Repeatedly select the
+    // largest box that fits into the remaining truck capacity until no more boxes
+    // can fit.
+    // Will it produce the optimal solution?
+    // No. Choosing the largest box first does not guarantee maximum space
+    // utilization. A combination of smaller boxes might fill the truck more
+    // efficiently.
+    // For example, with a truck capacity of 10 and boxes of sizes 6, 5, and 5, the
+    // greedy algorithm selects 6, leaving 4 units unused. However, selecting both
+    // boxes of size 5 fills the truck completely.
+    // Therefore, this greedy strategy does not guarantee an optimal solution.
+
+    // 10.2: You’re going to Europe, and you have seven days to see everything
+    // you can. You assign a point value to each item (how much you want to see it)
+    // and estimate how long it takes. How can you
+    // maximize the point total (seeing all the things you really want to
+    // see) during your stay? Come up with a greedy strategy. Will that
+    // give you the optimal solution?
+    // answer: Calculate how many points each attraction offers per day. Sort the
+    // attractions from highest to lowest and select them in that order, skipping
+    // any attraction that doesn't fit within the remaining seven days.
+    // Will it give the optimal solution?
+    // No. Although this strategy selects attractions that offer the most points per
+    // day individually, it doesn't consider how different attractions combine. A
+    // combination of attractions with lower individual ratios might give a higher
+    // total score.
+    // Therefore, the greedy approach does not guarantee an optimal solution.
+
+    // Greedy Approximation Algorithm - Radio Station Problem
+    public static Set<String> selectRadioStationsGreedy() {
+
+        Set<String> statesNeeded = new HashSet<>(Arrays.asList(
+                "mt", "wa", "or", "id", "nv", "ut", "ca", "az"));
+
+        Map<String, Set<String>> stations = new HashMap<>();
+
+        stations.put("kone", new HashSet<>(Arrays.asList("id", "nv", "ut")));
+        stations.put("ktwo", new HashSet<>(Arrays.asList("wa", "id", "mt")));
+        stations.put("kthree", new HashSet<>(Arrays.asList("or", "nv", "ca")));
+        stations.put("kfour", new HashSet<>(Arrays.asList("nv", "ut")));
+        stations.put("kfive", new HashSet<>(Arrays.asList("ca", "az")));
+
+        Set<String> finalStations = new HashSet<>();
+
+        // Repeat until all states are covered
+        while (!statesNeeded.isEmpty()) {
+
+            String bestStation = null;
+            Set<String> statesCovered = new HashSet<>();
+
+            // Find the station covering the most uncovered states
+            for (Map.Entry<String, Set<String>> entry : stations.entrySet()) {
+
+                String station = entry.getKey();
+                Set<String> statesForStation = entry.getValue();
+
+                Set<String> covered = new HashSet<>(statesNeeded);
+                covered.retainAll(statesForStation);
+
+                if (covered.size() > statesCovered.size()) {
+                    bestStation = station;
+                    statesCovered = covered;
+                }
+            }
+
+            // Prevent an infinite loop if some states cannot be covered
+            if (bestStation == null) {
+                throw new IllegalStateException(
+                        "Cannot cover remaining states: " + statesNeeded);
+            }
+
+            // Add the selected station
+            finalStations.add(bestStation);
+
+            // Remove states that are now covered
+            statesNeeded.removeAll(statesCovered);
+        }
+
+        return finalStations;
+    }
 }

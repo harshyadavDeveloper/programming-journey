@@ -624,3 +624,55 @@ Week 2: tracking a "lowest so far" is my min-finding pattern.
 
 STILL CONFUSING
 ==================================================
+
+==================================================
+DAY 10 | DATE: __/__/2026 | CHAPTER 10: Greedy Algorithms
+==================================================
+
+IN MY OWN WORDS
+A greedy algorithm makes the best-looking choice at each step (optimise
+locally) and never undoes it, hoping the result is the best overall
+(global optimum). It's simple and fast, but not always correct.
+
+Some problems (like the radio station / set-covering problem) can't be
+solved perfectly in reasonable time. The exact way is to try every
+subset of stations: 2^n subsets for n stations. For 100 stations that's
+impossible. A greedy APPROXIMATION algorithm gives an answer that is
+close to optimal, fast. Trade-off: I give up a guaranteed-best answer to
+get a fast one.
+
+Greedy for set covering: repeatedly pick the station that covers the
+most still-uncovered states, then remove those states, until none are
+left.
+
+EXAMPLES
+Coin change {10,5,2,1}: greedy is optimal. Coin change {4,3,1}, amount
+6: greedy gives 3 coins (4+1+1) but optimal is 2 (3+3).
+Truck boxes (10.1): capacity 10, boxes 6,5,5. Greedy picks 6 and wastes
+4. Optimal is 5+5.
+
+EXERCISES
+10.1 Truck boxes: greedy = largest box that fits. Not optimal (see
+     example above).
+10.2 (paste the question here)
+     Greedy = highest points per day first. Not optimal. My
+     counterexample: (build it with 7 days, then write it here)
+
+BIG O
+Exact (try all subsets): O(2^n)
+Greedy: each round scans all stations and I do at most one round per
+station, so it is roughly (stations x rounds x set operations),
+polynomial instead of exponential.
+
+WHAT I USED TO THINK
+(example: I thought an approximation was just "the same answer, faster".
+It's actually "slightly worse answer, much faster".)
+
+CONNECTS TO
+Chapter 9: Dijkstra is greedy too (cheapest unprocessed node first).
+Chapter 2/4 coin change: greedy fails for {4,3,1}.
+Week 5: HashSet (retainAll, removeAll) and HashMap's unspecified order.
+Earlier question: NP-complete (set covering is one of those hard ones).
+
+STILL CONFUSING
+==================================================
